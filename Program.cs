@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -45,6 +46,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // My 5th service. for accessing current user info in services and controllers
+builder.Services.AddScoped<DashboardService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<CurrentUserService>();
 
@@ -58,12 +60,18 @@ builder.Services.AddCors(options =>
 });
 
 
-
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<AuthService>();
 
 // Build the app.
 var app = builder.Build();
+
+// Seed initial data (roles) on startup
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<FMASDbContext>();
+    DbSeeder.SeedRoles(context);
+}
 
 // Middleware for CORS (AFTER BUILD)
 app.UseCors("AllowAll");

@@ -3,6 +3,7 @@ using FMAS.API.Data;
 using FMAS.API.DTOs.Auth;
 using FMAS.API.Entities;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -56,10 +57,24 @@ namespace FMAS.API.Services
 
             _context.Users.Add(user);
 
+            // 4. Assign Admin role to the user
+            var adminRole = _context.Roles.FirstOrDefault(r => r.Name == "Admin");
+
+            if (adminRole == null)
+            {
+                throw new Exception("Admin role not found. Seed roles first.");
+            }
+
+            _context.UserRoles.Add(new UserRole
+            {
+                UserId = user.UserId,
+                RoleId = adminRole.RoleId
+            });
+
             _context.SaveChanges();
 
             // 4. Generate JWT (reuse your login logic)
-            return GenerateToken(user);
+            return GenerateToken(user, "Admin");
         }
 
         public LoginResponseDto Login(LoginDto dto)
@@ -74,7 +89,14 @@ namespace FMAS.API.Services
             if (!isValid)
                 throw new Exception("Invalid credentials");
 
-            var token = GenerateToken(user);
+            var role = (from ur in _context.Set<UserRole>()
+                        join r in _context.Set<Role>()
+                        on ur.RoleId equals r.RoleId
+                        where ur.UserId == user.UserId
+                        select r.Name)
+                        .FirstOrDefault();
+
+            var token = GenerateToken(user, role);
 
             return new LoginResponseDto
             {
@@ -83,7 +105,7 @@ namespace FMAS.API.Services
         }
 
         // Private method to generate JWT token
-        private string GenerateToken(Entities.User user)
+        private string GenerateToken(Entities.User user, string role)
         {
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_config["Jwt:Key"])
@@ -95,7 +117,8 @@ namespace FMAS.API.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim("organization_id", user.OrganizationId.ToString())
+                new Claim("organization_id", user.OrganizationId.ToString()),
+                new Claim("role", role ?? "Clerk")
             };
 
             var token = new JwtSecurityToken(

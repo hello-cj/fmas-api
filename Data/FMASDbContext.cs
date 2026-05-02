@@ -1,5 +1,6 @@
 ﻿using FMAS.API.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace FMAS.API.Data
 {
@@ -13,6 +14,8 @@ namespace FMAS.API.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<JournalEntry> JournalEntries { get; set; }
         public DbSet<JournalEntryLine> JournalEntryLines { get; set; }
@@ -21,14 +24,14 @@ namespace FMAS.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // USERS = GLOBAL (IMPORTANT FOR LOGIN)
+            modelBuilder.Entity<JournalEntry>();
+            modelBuilder.Entity<JournalEntryLine>();
             modelBuilder.Entity<User>();
-
+            modelBuilder.Entity<Role>();
+            modelBuilder.Entity<UserRole>()
+                .HasKey(x => new { x.UserId, x.RoleId });
             modelBuilder.Entity<Organization>();
 
-            // TENANT-SCOPED DATA ONLY
-            modelBuilder.Entity<JournalEntry>()
-                .HasQueryFilter(x => x.OrganizationId == _organizationId);
         }
     }
 }
