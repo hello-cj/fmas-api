@@ -1,7 +1,15 @@
-﻿namespace FMAS.API.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace FMAS.API.Entities
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+
+    public enum JournalEntryStatus
+    {
+        Draft,
+        Posted,
+        Locked
+    }
 
     [Table("journal_entries")]
     public class JournalEntry
@@ -29,6 +37,8 @@
 
         [Column("created_by")]
         public Guid? CreatedBy { get; set; }
+
+        public JournalEntryStatus Status { get; set; } = JournalEntryStatus.Draft;
 
         public List<JournalEntryLine> Lines { get; set; } = new();
     }

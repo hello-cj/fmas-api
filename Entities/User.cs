@@ -12,7 +12,7 @@ namespace FMAS.API.Entities
         public Guid UserId { get; set; }
 
         [Column("organization_id")]
-        public Guid OrganizationId { get; set; }
+        public Guid? OrganizationId { get; set; } // error here < -
 
         [Column("email")]
         public string Email { get; set; }

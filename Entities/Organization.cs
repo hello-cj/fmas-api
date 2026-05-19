@@ -19,6 +19,9 @@
         [Column("email")]
         public string Email { get; set; }
 
+        [Column("is_active")]
+        public bool IsActive { get; set; } = true;
+
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }

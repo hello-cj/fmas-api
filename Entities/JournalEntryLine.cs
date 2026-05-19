@@ -25,5 +25,9 @@ namespace FMAS.API.Entities
 
         [Column("credit")]
         public decimal Credit { get; set; }
+
+        public Account Account { get; set; }
+
+        public JournalEntry JournalEntry { get; set; }
     }
 }

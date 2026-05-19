@@ -17,10 +17,419 @@ namespace FMAS.API.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.7")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ARPayment", b =>
+                {
+                    b.Property<Guid>("ARPaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ARInvoiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ARPaymentId");
+
+                    b.HasIndex("ARInvoiceId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("ARPayments");
+                });
+
+            modelBuilder.Entity("ARPaymentAllocation", b =>
+                {
+                    b.Property<Guid>("ARPaymentAllocationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ARInvoiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ARPaymentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("ARPaymentAllocationId");
+
+                    b.HasIndex("ARInvoiceId");
+
+                    b.HasIndex("ARPaymentId");
+
+                    b.ToTable("ARPaymentAllocation");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.APInvoice", b =>
+                {
+                    b.Property<Guid>("APInvoiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("VendorId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("APInvoiceId");
+
+                    b.HasIndex("VendorId");
+
+                    b.ToTable("ap_invoices");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.APInvoiceLine", b =>
+                {
+                    b.Property<Guid>("APInvoiceLineId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("APInvoiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("APInvoiceLineId");
+
+                    b.HasIndex("APInvoiceId");
+
+                    b.ToTable("ap_invoice_lines");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.APPayment", b =>
+                {
+                    b.Property<Guid>("APPaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("APInvoiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("VendorId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("APPaymentId");
+
+                    b.HasIndex("APInvoiceId");
+
+                    b.HasIndex("VendorId");
+
+                    b.ToTable("APPayments");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.APPaymentAllocation", b =>
+                {
+                    b.Property<Guid>("APPaymentAllocationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("APInvoiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("APPaymentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("APPaymentAllocationId");
+
+                    b.HasIndex("APPaymentId");
+
+                    b.ToTable("APPaymentAllocation");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.ARInvoice", b =>
+                {
+                    b.Property<Guid>("ARInvoiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("PaidAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("ARInvoiceId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("ar_invoices");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.ARInvoiceLine", b =>
+                {
+                    b.Property<Guid>("ARInvoiceLineId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ARInvoiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("ARInvoiceLineId");
+
+                    b.HasIndex("ARInvoiceId");
+
+                    b.ToTable("ar_invoice_lines");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.Account", b =>
+                {
+                    b.Property<Guid>("AccountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AccountType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AccountId");
+
+                    b.ToTable("accounts");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.AuditLog", b =>
+                {
+                    b.Property<Guid>("AuditLogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("EntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("EntityName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Module")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserEmail")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AuditLogId");
+
+                    b.ToTable("AuditLogs");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.Budget", b =>
+                {
+                    b.Property<Guid>("BudgetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("BudgetId");
+
+                    b.ToTable("Budgets");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.BudgetLine", b =>
+                {
+                    b.Property<Guid>("BudgetLineId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("BudgetId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("BudgetLineId");
+
+                    b.HasIndex("BudgetId");
+
+                    b.ToTable("BudgetLines");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.Customer", b =>
+                {
+                    b.Property<Guid>("CustomerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("CustomerId");
+
+                    b.ToTable("Customers");
+                });
 
             modelBuilder.Entity("FMAS.API.Entities.JournalEntry", b =>
                 {
@@ -50,6 +459,9 @@ namespace FMAS.API.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("reference");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("JournalEntryId");
 
@@ -81,6 +493,8 @@ namespace FMAS.API.Migrations
 
                     b.HasKey("LineId");
 
+                    b.HasIndex("AccountId");
+
                     b.HasIndex("JournalEntryId");
 
                     b.ToTable("journal_entry_lines");
@@ -101,6 +515,10 @@ namespace FMAS.API.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("email");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -149,7 +567,7 @@ namespace FMAS.API.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_active");
 
-                    b.Property<Guid>("OrganizationId")
+                    b.Property<Guid?>("OrganizationId")
                         .HasColumnType("uuid")
                         .HasColumnName("organization_id");
 
@@ -178,13 +596,202 @@ namespace FMAS.API.Migrations
                     b.ToTable("user_roles");
                 });
 
+            modelBuilder.Entity("FMAS.API.Entities.Vendor", b =>
+                {
+                    b.Property<Guid>("VendorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("VendorId");
+
+                    b.ToTable("Vendors");
+                });
+
+            modelBuilder.Entity("ARPayment", b =>
+                {
+                    b.HasOne("FMAS.API.Entities.ARInvoice", "ARInvoice")
+                        .WithMany()
+                        .HasForeignKey("ARInvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FMAS.API.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ARInvoice");
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("ARPaymentAllocation", b =>
+                {
+                    b.HasOne("FMAS.API.Entities.ARInvoice", "ARInvoice")
+                        .WithMany()
+                        .HasForeignKey("ARInvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ARPayment", "ARPayment")
+                        .WithMany("Allocations")
+                        .HasForeignKey("ARPaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ARInvoice");
+
+                    b.Navigation("ARPayment");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.APInvoice", b =>
+                {
+                    b.HasOne("FMAS.API.Entities.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.APInvoiceLine", b =>
+                {
+                    b.HasOne("FMAS.API.Entities.APInvoice", "APInvoice")
+                        .WithMany("Lines")
+                        .HasForeignKey("APInvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("APInvoice");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.APPayment", b =>
+                {
+                    b.HasOne("FMAS.API.Entities.APInvoice", "APInvoice")
+                        .WithMany()
+                        .HasForeignKey("APInvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FMAS.API.Entities.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("APInvoice");
+
+                    b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.APPaymentAllocation", b =>
+                {
+                    b.HasOne("FMAS.API.Entities.APPayment", null)
+                        .WithMany("Allocations")
+                        .HasForeignKey("APPaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.ARInvoice", b =>
+                {
+                    b.HasOne("FMAS.API.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.ARInvoiceLine", b =>
+                {
+                    b.HasOne("FMAS.API.Entities.ARInvoice", "ARInvoice")
+                        .WithMany("Lines")
+                        .HasForeignKey("ARInvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ARInvoice");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.BudgetLine", b =>
+                {
+                    b.HasOne("FMAS.API.Entities.Budget", "Budget")
+                        .WithMany("Lines")
+                        .HasForeignKey("BudgetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Budget");
+                });
+
             modelBuilder.Entity("FMAS.API.Entities.JournalEntryLine", b =>
                 {
-                    b.HasOne("FMAS.API.Entities.JournalEntry", null)
+                    b.HasOne("FMAS.API.Entities.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FMAS.API.Entities.JournalEntry", "JournalEntry")
                         .WithMany("Lines")
                         .HasForeignKey("JournalEntryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("JournalEntry");
+                });
+
+            modelBuilder.Entity("ARPayment", b =>
+                {
+                    b.Navigation("Allocations");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.APInvoice", b =>
+                {
+                    b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.APPayment", b =>
+                {
+                    b.Navigation("Allocations");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.ARInvoice", b =>
+                {
+                    b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("FMAS.API.Entities.Budget", b =>
+                {
+                    b.Navigation("Lines");
                 });
 
             modelBuilder.Entity("FMAS.API.Entities.JournalEntry", b =>

@@ -89,12 +89,20 @@ namespace FMAS.API.Services
             if (!isValid)
                 throw new Exception("Invalid credentials");
 
-            var role = (from ur in _context.Set<UserRole>()
-                        join r in _context.Set<Role>()
+            var organization = _context.Organizations
+    .FirstOrDefault(x => x.OrganizationId == user.OrganizationId);
+
+            if (organization != null && !organization.IsActive)
+            {
+                throw new Exception("Organization is suspended.");
+            }
+
+            var role = (from ur in _context.UserRoles
+                        join r in _context.Roles
                         on ur.RoleId equals r.RoleId
                         where ur.UserId == user.UserId
                         select r.Name)
-                        .FirstOrDefault();
+                        .FirstOrDefault() ?? "Clerk";
 
             var token = GenerateToken(user, role);
 
@@ -114,12 +122,27 @@ namespace FMAS.API.Services
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim("organization_id", user.OrganizationId.ToString()),
-                new Claim("role", role ?? "Clerk")
-            };
+{
+    new Claim(
+        ClaimTypes.NameIdentifier,
+        user.UserId.ToString()
+    ),
+
+    new Claim(
+        ClaimTypes.Email,
+        user.Email
+    ),
+
+    new Claim(
+        ClaimTypes.Role,
+        role ?? "Clerk"
+    ),
+
+    new Claim(
+        "organization_id",
+        user.OrganizationId?.ToString() ?? ""//error here < -
+    )
+};
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
