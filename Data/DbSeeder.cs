@@ -7,7 +7,7 @@ namespace FMAS.API.Data
     {
         public static void Seed(FMASDbContext context)
         {
-            context.Database.Migrate();
+            //context.Database.Migrate();
 
             SeedRoles(context);
             SeedFinanceData(context);
